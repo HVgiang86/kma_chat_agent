@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Body
 from typing import Dict, Any
 from bson import ObjectId
-from app.models.message import ChatbotRequest
-from app.services.chatbot import process_chat_request
+from app.models.message import ChatbotRequest, AnonymousChatbotRequest
+from app.models.conversation import ConversationCreate
+from app.services.chatbot import process_chat_request, send_query_to_agent
 from app.db import Database
+import uuid
 
 router = APIRouter()
 
@@ -53,4 +55,24 @@ async def chat_with_bot(request: ChatbotRequest):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error processing request: {str(e)}"
+        )
+
+@router.post("/anonymous", status_code=status.HTTP_200_OK)
+async def anonymous_chat(request: AnonymousChatbotRequest):
+    """
+    Send a query to the chatbot without requiring an account
+    This will automatically create a conversation and handle the chat
+    """
+    try:
+
+        response = await send_query_to_agent(
+            request.query,
+        )
+        return {
+            "response": response,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing anonymous request: {str(e)}"
         ) 

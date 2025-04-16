@@ -55,4 +55,8 @@ class ChatbotRequest(BaseModel):
     conversation_id: str
     user_id: str
     query: str
+    attachments: List[Dict[str, Any]] = []
+
+class AnonymousChatbotRequest(BaseModel):
+    query: str
     attachments: List[Dict[str, Any]] = [] 

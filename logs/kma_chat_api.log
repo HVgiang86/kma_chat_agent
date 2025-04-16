@@ -460,3 +460,26 @@
 {"timestamp": "2025-04-16 15:59:04", "name": "kma_chat_api", "level": "INFO", "message": "Request received: GET /api/openapi.json", "query_params": ""}
 {"timestamp": "2025-04-16T08:59:04.104154", "name": "kma_chat_api", "level": "INFO", "message": "Request GET /api/openapi.json completed with status 200", "method": "GET", "url": "/api/openapi.json", "status_code": 200, "processing_time_ms": 25.313138961791992}
 {"timestamp": "2025-04-16 15:59:50", "name": "kma_chat_api", "level": "INFO", "message": "Application shutting down"}
+{"timestamp": "2025-04-16 16:03:37", "name": "kma_chat_api", "level": "INFO", "message": "Application starting up", "mongodb_db": "kma_chat", "log_level": "DEBUG"}
+{"timestamp": "2025-04-16 16:04:08", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:04:08.736708", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 422", "method": "POST", "url": "/api/chat/anonymous", "status_code": 422, "processing_time_ms": 3.751993179321289}
+{"timestamp": "2025-04-16 16:04:47", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:04:52.766508", "name": "kma_chat_api", "level": "INFO", "message": "DB insert_one on conversations: success", "operation": "insert_one", "collection": "conversations", "success": true, "data": {"inserted_id": "67ff72afd7912ddd00cfc615"}}
+{"timestamp": "2025-04-16T09:04:52.767538", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 500", "method": "POST", "url": "/api/chat/anonymous", "status_code": 500, "processing_time_ms": 5140.865087509155}
+{"timestamp": "2025-04-16 16:06:10", "name": "kma_chat_api", "level": "INFO", "message": "Application shutting down"}
+{"timestamp": "2025-04-16 16:06:13", "name": "kma_chat_api", "level": "INFO", "message": "Application starting up", "mongodb_db": "kma_chat", "log_level": "DEBUG"}
+{"timestamp": "2025-04-16 16:06:14", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:06:19.825311", "name": "kma_chat_api", "level": "INFO", "message": "DB insert_one on conversations: success", "operation": "insert_one", "collection": "conversations", "success": true, "data": {"inserted_id": "67ff7306fee2d0be9900b15f"}}
+{"timestamp": "2025-04-16T09:06:19.831663", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 500", "method": "POST", "url": "/api/chat/anonymous", "status_code": 500, "processing_time_ms": 5114.554882049561}
+{"timestamp": "2025-04-16 16:11:27", "name": "kma_chat_api", "level": "INFO", "message": "Application shutting down"}
+{"timestamp": "2025-04-16 16:11:29", "name": "kma_chat_api", "level": "INFO", "message": "Application starting up", "mongodb_db": "kma_chat", "log_level": "DEBUG"}
+{"timestamp": "2025-04-16 16:13:23", "name": "kma_chat_api", "level": "INFO", "message": "Application shutting down"}
+{"timestamp": "2025-04-16 16:13:26", "name": "kma_chat_api", "level": "INFO", "message": "Application starting up", "mongodb_db": "kma_chat", "log_level": "DEBUG"}
+{"timestamp": "2025-04-16 16:13:34", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:13:34.851436", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 200", "method": "POST", "url": "/api/chat/anonymous", "status_code": 200, "processing_time_ms": 105.43584823608398}
+{"timestamp": "2025-04-16 16:15:26", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:15:26.846570", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 200", "method": "POST", "url": "/api/chat/anonymous", "status_code": 200, "processing_time_ms": 120.24521827697754}
+{"timestamp": "2025-04-16 16:15:38", "name": "kma_chat_api", "level": "INFO", "message": "Request received: POST /api/chat/anonymous", "query_params": ""}
+{"timestamp": "2025-04-16T09:15:38.470532", "name": "kma_chat_api", "level": "INFO", "message": "Request POST /api/chat/anonymous completed with status 200", "method": "POST", "url": "/api/chat/anonymous", "status_code": 200, "processing_time_ms": 111.26232147216797}
+{"timestamp": "2025-04-16 16:20:15", "name": "kma_chat_api", "level": "INFO", "message": "Application shutting down"}
+{"timestamp": "2025-04-16 16:20:18", "name": "kma_chat_api", "level": "INFO", "message": "Application starting up", "mongodb_db": "kma_chat", "log_level": "DEBUG"}

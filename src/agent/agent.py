@@ -110,7 +110,7 @@ class HybridRetriever(BaseRetriever, BaseModel):
         raise NotImplementedError("Async retrieval not implemented")
 
 
-def create_vector_database(output_path, data_path="/Users/hoang.van.giang/Projects/kma_chat/kma_chat_agent/KMA Chat Agent/src/agent/regulation.txt"):
+def create_vector_database(output_path, data_path="/Users/luuhoanglinh/School/FinalProject/Project/kma_chat_agent/src/agent/regulation.txt"):
     """Create and save the vector database"""
     try:
         # Load the regulation document with UTF-8 encoding
@@ -156,7 +156,7 @@ def load_vector_database(output_path):
             chunks = create_vector_database(output_path)
         else:
             # If vector database exists, we still need to get the chunks
-            with open("/Users/hoang.van.giang/Projects/kma_chat/kma_chat_agent/KMA Chat Agent/src/agent/regulation.txt", "r", encoding="utf-8") as f:
+            with open("/Users/luuhoanglinh/School/FinalProject/Project/kma_chat_agent/src/agent/regulation.txt", "r", encoding="utf-8") as f:
                 regulations = f.read()
 
             text_splitter = RecursiveCharacterTextSplitter(
@@ -187,7 +187,9 @@ def get_prompt():
     Bạn sẽ dựa trên thông tin từ tài liệu được cung cấp bên dưới để trả lời câu hỏi của người dùng.
     Hãy trả lời các câu hỏi dưới vai trò một trợ lý ảo thông minh và chuyên nghiệp. Trả lời chính xác, ngắn gọn.
     Nếu không thể trả lời, hãy nói rằng bạn không thể trả lời câu hỏi đó.
-    Hãy trả lời các câu hỏi bằng tiếng Việt
+    Hãy trả lời các câu hỏi bằng tiếng Việt.
+    Luôn trả lời dưới dạng một đoạn văn hoàn chỉnh, không trả lời theo dạng danh sách.
+    Luôn trả lời dưới dạng văn bản có định dạng, sử dụng định dạng markdown nếu cần thiết.
 
     Tài liệu: {context}
     Lịch sử trò chuyện giữa bạn và người dùng: {chat_history}
