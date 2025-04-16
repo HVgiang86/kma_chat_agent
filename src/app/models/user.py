@@ -78,8 +78,6 @@ class UserResponse(BaseModel):
     app_settings: Optional[Dict] = None
     is_guest: bool
     is_active: bool
-    created_at: datetime
-    updated_at: datetime
     
     model_config = {
         "populate_by_name": True

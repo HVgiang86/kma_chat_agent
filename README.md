@@ -61,5 +61,60 @@ poetry run python -m app.main run_backend
 ## API Documentation
 
 When the server is running, you can access the API documentation at:
+
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
+
+## Testing
+
+### Running Tests
+
+The project uses pytest for testing. Here are the available test commands:
+
+```bash
+# Run all tests with coverage report
+poetry run pytest tests/ -v --cov=app --cov-report=term-missing
+
+# Run specific test files
+poetry run pytest tests/app/models/test_user.py -v
+poetry run pytest tests/app/models/test_message.py -v
+poetry run pytest tests/app/models/test_conversation.py -v
+poetry run pytest tests/app/services/test_chatbot.py -v
+
+# Run basic test to verify setup
+poetry run pytest tests/test_basic.py -v
+
+# Run tests with PYTHONPATH set (if import issues occur)
+PYTHONPATH=src poetry run pytest tests/app/models/test_conversation.py -v
+PYTHONPATH=src poetry run pytest tests/app/services/test_chatbot.py -v
+
+# Run tests without output capture (for debugging)
+PYTHONPATH=src poetry run pytest tests/app/services/test_chatbot.py -v --capture=no
+```
+
+### Test Coverage
+
+The test suite covers:
+
+- Models
+
+  - User model (UserBase, UserCreate, UserUpdate, UserInDB, UserResponse)
+  - Message model (MessageBase, MessageCreate, MessageUpdate, MessageInDB, MessageResponse, ChatbotRequest)
+  - Conversation model (ConversationBase, ConversationCreate, ConversationUpdate, ConversationInDB, ConversationResponse)
+
+- Services
+  - Chatbot service (get_conversation, send_query_to_agent, process_chat_request)
+
+### Test Configuration
+
+Test configuration is managed in `pyproject.toml`:
+
+```toml
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=app --cov-report=term-missing"
+```

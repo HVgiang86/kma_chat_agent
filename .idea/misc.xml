@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Poetry (KMA Chat Agent)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (KMA Chat Agent)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (kma_chat_agent)" project-jdk-type="Python SDK" />
 </project>

@@ -21,10 +21,12 @@ class Database:
     async def find_one(collection: str, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Find a document in the database"""
         try:
-            query = {**query, "deleted_at": {"$exists": False}}
+            query = {**query, "deleted_at": None}
             logger.debug(f"Finding one document in {collection}", {"query": str(query)})
+            logger.info(f"Finding one document in {collection}", {"query": str(query)})
             result = await get_db()[collection].find_one(query)
             logger.log_db_operation("find_one", collection, success=True)
+            logger.info(f"Document found in {collection}", {"result": str(result)})
             return result
         except Exception as e:
             logger.error(f"Error finding document in {collection}", {"error": str(e), "query": str(query)}, exc_info=True)
