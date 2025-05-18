@@ -3,6 +3,7 @@ RAG (Retrieval Augmented Generation) tool for accessing KMA regulations.
 
 This tool allows querying information about KMA's regulations, rules, and policies.
 """
+import logging
 
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
@@ -13,6 +14,9 @@ from rag.rag_graph import KMAChatAgent
 class KMARegulationInput(BaseModel):
     query: str = Field(description="The query about KMA regulations to search for")
 
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Initialize the KMAChatAgent as a singleton
 _chat_agent = None
@@ -48,18 +52,17 @@ async def search_kma_regulations(query: str) -> str:
         # Use the agent's chat method to process the query
         response = agent.chat(query)
 
-        # Format response
-        result = {"answer": response, "message": "KMA regulation information retrieved successfully"}
+        # Log
+        logger.info(f"Retrieval: {query}")
+        logger.info(f"Response: {response}")
+
 
         return response
 
     except Exception as e:
-        # return json.dumps({
-        #     "answer": "",
-        #     "message": f"Error searching KMA regulations: {str(e)}"
-        # })
+        logger.error(f"Error searching KMA regulations: {str(e)}")
 
-        return "Error searching KMA regulations"
+        return "Cannot retrieve information at this time. Please try again later."
 
 
 def create_rag_tool():

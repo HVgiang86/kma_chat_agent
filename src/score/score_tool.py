@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 from typing import Optional
 
@@ -7,6 +8,10 @@ from pydantic import BaseModel, Field, validator
 
 from score.student_tool import global_db
 from .models import ScoreFilter, ScoreResponse
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class ScoreInput(BaseModel):
@@ -72,6 +77,8 @@ async def get_student_scores(student_code: str, semester: Optional[str] = None,
         return json.dumps(response.model_dump())
 
     except Exception as e:
-        return json.dumps({"scores": [], "message": f"Error retrieving scores: {str(e)}"})
+        logger.error(f"Error retrieving scores: {str(e)}")
+
+        return json.dumps({"scores": [], "message": f"Error retrieving scores because: {str(e)}\nPlease try again later."})
     finally:
         await global_db.close()

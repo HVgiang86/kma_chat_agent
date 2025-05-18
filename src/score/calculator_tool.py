@@ -1,8 +1,12 @@
 import json
+import logging
 
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
 
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class ScoreCalculatorInput(BaseModel):
     scores_json: str = Field(description="JSON string containing scores data to calculate averages from")
@@ -61,4 +65,5 @@ def calculate_average_scores(scores_json: str) -> str:
         return json.dumps({"averages": averages, "message": "Average scores calculated successfully"})
 
     except Exception as e:
-        return json.dumps({"averages": {}, "message": f"Error calculating averages: {str(e)}"})
+        logger.error(e)
+        return json.dumps({"averages": {}, "message": f"Error calculating averages because: {str(e)}"})

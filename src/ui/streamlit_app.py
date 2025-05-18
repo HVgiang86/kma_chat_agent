@@ -64,7 +64,11 @@ if user_query:
             # Call the agent
             try:
                 response = asyncio.run(st.session_state.chat_agent.chat(user_query))
-                last_res = response[-1]
+
+                if isinstance(response, dict):
+                    last_res = response["messages"][-1]
+
+                print(last_res)
 
                 if isinstance(last_res, AIMessage):
                     messages = last_res.content
