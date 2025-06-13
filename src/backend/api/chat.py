@@ -50,6 +50,7 @@ async def get_all_conversations(
         skip: int = Query(0, ge=0),
         limit: int = Query(20, ge=1, le=100)
 ):
+    await mongodb.connect_to_mongodb()
     cursor = mongodb.db.conversations.find(
         {}
     ).sort("updated_at", -1).skip(skip).limit(limit)
@@ -66,6 +67,8 @@ async def get_all_conversations(
         )
         conversations.append(response_data)
 
+    await mongodb.close_mongodb_connection()
+
     return BaseResponse(
         statusCode=status.HTTP_200_OK,
         message="Conversations retrieved successfully",
@@ -80,6 +83,8 @@ async def get_conversations_of_user(
 ):
     """Get all conversations for a user"""
     user_id_obj = validate_object_id(user_id)
+
+    await mongodb.connect_to_mongodb()
 
     conversations = []
 
@@ -104,6 +109,8 @@ async def get_conversations_of_user(
             updated_at = conv["updated_at"],
         )
         conversations.append(response_data)
+
+    await mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_200_OK,
@@ -115,6 +122,7 @@ async def get_conversations_of_user(
 async def create_conversation(
     conversation: ConversationCreate,
 ):
+    await mongodb.connect_to_mongodb()
     logger.info(f"Creating conversation: {conversation.title}")
     """Create a new conversation"""
     user_id_obj = validate_object_id(conversation.user_id)
@@ -150,6 +158,9 @@ async def create_conversation(
         created_at = created_conversation["created_at"],
         updated_at = created_conversation["updated_at"],
     )
+
+
+    await mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_201_CREATED,
@@ -164,6 +175,8 @@ async def update_conversation(
 ):
     """Update a conversation's title"""
     conv_id = validate_object_id(conversation_id)
+
+    await mongodb.connect_to_mongodb()
 
     result = await mongodb.db.conversations.update_one(
         {"_id": conv_id},
@@ -182,6 +195,8 @@ async def update_conversation(
         created_at=updated_conversation["created_at"],
         updated_at=updated_conversation["updated_at"],
     )
+
+    await mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_200_OK,
@@ -193,6 +208,10 @@ async def update_conversation(
 async def delete_conversation(conversation_id: str):
     """Delete a conversation and all its messages"""
     conv_id = validate_object_id(conversation_id)
+
+    await mongodb.connect_to_mongodb()
+
+    # await mongodb.connect_to_mongodb()
 
     # First check if conversation exists
     conversation = await mongodb.db.conversations.find_one(
@@ -207,6 +226,8 @@ async def delete_conversation(conversation_id: str):
     
     # Delete the conversation
     await mongodb.db.conversations.delete_one({"_id": conv_id})
+
+    mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_200_OK,
@@ -222,6 +243,8 @@ async def get_messages_of_conversation(
 ):
     """Get messages for a specific conversation"""
     conv_id = validate_object_id(conversation_id)
+
+    await mongodb.connect_to_mongodb()
 
     # Check if conversation exists and belongs to the user
     conversation = await mongodb.db.conversations.find_one(
@@ -250,6 +273,8 @@ async def get_messages_of_conversation(
 
     print("all messages")
     print(messages)
+
+    mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_200_OK,
@@ -265,6 +290,8 @@ async def query_ai(
 ):
     """Add a new message to a conversation and get AI response using memory-aware chat"""
     conv_id = validate_object_id(conversation_id)
+
+    await mongodb.connect_to_mongodb()
 
     # Check if conversation exists and belongs to the user
     conversation = await mongodb.db.conversations.find_one(
@@ -346,6 +373,8 @@ async def query_ai(
         created_at=created_message["created_at"],
     )
 
+    mongodb.close_mongodb_connection()
+
     return BaseResponse(
         statusCode=status.HTTP_201_CREATED,
         message="Message created successfully",
@@ -359,7 +388,8 @@ async def quick_chat(
     student_code: str = Header(None)
 ):
     """Get a quick response without saving conversation history"""
-    
+
+    await mongodb.connect_to_mongodb()
     # Create a single message for this quick chat
     conversation_history = [HumanMessage(content=message.content)]
     
@@ -385,6 +415,8 @@ async def quick_chat(
         content=ai_response,
         created_at=now,
     )
+
+    await mongodb.close_mongodb_connection()
     
     return BaseResponse(
         statusCode=status.HTTP_200_OK,

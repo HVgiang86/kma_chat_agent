@@ -1,5 +1,6 @@
 import logging
 import os
+from contextlib import asynccontextmanager
 
 import typer
 import uvicorn
@@ -8,14 +9,14 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-# from .db.mongodb import MongoDB, mongodb
-from db.mongodb import MongoDB, mongodb
-# from .models.responses import BaseResponse
-# from .api.chat import router as chat_router
-# from .api.user import router as user_router
-from models.responses import BaseResponse
-from api.chat import router as chat_router
-from api.user import router as user_router
+from .db.mongodb import MongoDB, mongodb
+# from db.mongodb import MongoDB, mongodb
+from .models.responses import BaseResponse
+from .api.chat import router as chat_router
+from .api.user import router as user_router
+# from models.responses import BaseResponse
+# from api.chat import router as chat_router
+# from api.user import router as user_router
 
 load_dotenv()
 
@@ -26,11 +27,29 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app):
+    print("LIFESPAN: Starting up...")
+    logger.info("LIFESPAN: Connecting to MongoDB...")
+    try:
+        await mongodb.connect_to_mongodb()
+        print("LIFESPAN: MongoDB connected successfully")
+        logger.info("LIFESPAN: MongoDB connected successfully")
+    except Exception as e:
+        print(f"LIFESPAN: Error connecting to MongoDB: {e}")
+        logger.error(f"LIFESPAN: Error connecting to MongoDB: {e}")
+        raise
+    yield
+    print("LIFESPAN: Shutting down...")
+    logger.info("LIFESPAN: Closing MongoDB connection...")
+    await mongodb.close_mongodb_connection()
+
 # Create FastAPI backend
 app = FastAPI(
     title="AI Chat API",
     description="API for managing AI chat conversations",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -70,14 +89,6 @@ async def general_exception_handler(request: Request, exc: Exception):
         ).model_dump(),
     )
 
-@app.on_event("startup")
-async def startup_db_client():
-    await mongodb.connect_to_mongodb()
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    await mongodb.close_mongodb_connection()
-
 @app.get("/", response_model=BaseResponse)
 async def root():
     return BaseResponse(
@@ -86,31 +97,30 @@ async def root():
         data=None
     )
 
-def run_backend(port: int = 8000, host: str = "0.0.0.0", reload: bool = True):
-    """
-    Run the FastAPI backend with the specified configuration.
-    
-    Args:
-        port: The port to run the server on
-        host: The host address to bind to
-        reload: Whether to reload the server on code changes
-    """
-    logger.info(f"Starting KMA Chat Agent backend on {host}:{port}")
-    uvicorn.run("src.backend.main:app", host=host, port=port, reload=reload)
+@app.get("/health", response_model=BaseResponse)
+async def health_check():
+    db_status = "connected" if mongodb.db is not None else "disconnected"
+    return BaseResponse(
+        statusCode=status.HTTP_200_OK,
+        message=f"API is running - Database: {db_status}",
+        data={"database": db_status, "client": mongodb.client is not None}
+    )
 
-# Command line interface using Typer
 cli = typer.Typer()
 
 @cli.command()
-def start(port: int = 8000, host: str = "0.0.0.0", reload: bool = True):
-    """Run the KMA Chat Agent backend"""
-    port = os.environ.get("PORT")
-    if port is None:
-        port = 3434
-    else:
-        port = int(port)
-
-    run_backend(port=port, host=host, reload=reload)
+def runserver(
+    host: str = typer.Option("0.0.0.0", help="Host to bind"),
+    port: int = typer.Option(3434, help="Port to bind"),
+    reload: bool = typer.Option(True, help="Enable auto-reload"),
+):
+    """Run the FastAPI server."""
+    uvicorn.run(
+        app,
+        host=host,
+        port=port,
+        reload=reload,
+    )
 
 if __name__ == "__main__":
-    cli() 
+    cli()
